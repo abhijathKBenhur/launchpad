@@ -56,7 +56,7 @@ export default ({ roundedHeaderButton }) => {
     baseURL: process.env.NODE_ENV == "production" ? "/api": "http://localhost:4000/api"
 })
   const [searchText, setSearchText] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [subscribed, setSubscribed] = useState(true);
   const [subscribedList, setSubscribedList] = useState(0);
   const [errorMailId, setErrorMail] = useState(false);
 
@@ -100,10 +100,14 @@ export default ({ roundedHeaderButton }) => {
             <Paragraph>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
             </Paragraph>
-            <Actions>
-              <input type="text" onKeyUp={type} placeholder="Your E-mail Address" />
+            {!subscribed && <Actions>
+              <input type="text" onKeyUp={type} placeholder="Your E-mail Address" className={errorMailId? "error_mail_id":""}/>
               <button onClick={() => submitMailId()}>Get Started</button>
-            </Actions>
+            </Actions> }
+            {subscribed && 
+            <Paragraph>
+              <span tw="text-primary-500" style={{fontWeight:500}}>Greetings! You are one of our ealry triber and holds high value in the tribe. We will keep you posted when we launch! </span>
+            </Paragraph>}
             <CustomersLogoStrip>
               <p>Get to us</p>
               <InstagramIcon style={{display:"inline"}}/>
