@@ -1,10 +1,11 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 //eslint-disable-next-line
 import { css } from "styled-components/macro";
 import Header from "../headers/light.js";
 import axios from 'axios'
+import reactGA from 'react-ga'
 import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-1.svg";
 import DesignIllustration from "../../images/design-illustration-2.svg";
 import CustomersLogoStripImage from "../../images/customers-logo-strip.png";
@@ -56,9 +57,14 @@ export default ({ roundedHeaderButton }) => {
     baseURL: process.env.NODE_ENV == "production" ? "/api": "http://localhost:4000/api"
 })
   const [searchText, setSearchText] = useState("");
-  const [subscribed, setSubscribed] = useState(true);
+  const [subscribed, setSubscribed] = useState(false);
   const [subscribedList, setSubscribedList] = useState(0);
   const [errorMailId, setErrorMail] = useState(false);
+
+  useEffect(() => {
+    reactGA.initialize("UA-207963115-1")
+    reactGA.pageview("Subscribe Page")
+  }, []);
 
   const submitMailId = () => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -69,12 +75,12 @@ export default ({ roundedHeaderButton }) => {
       api.post(`/subscribe`,{
         mailID: searchText,
       }).then((success) => {
-        // reactGA.event({
-        //   category:'Button',
-        //   action:"SUBSCRIBED",
-        //   label:"Subscribed for mail",
-        //   value: searchText
-        // })
+        reactGA.event({
+          category:'Button',
+          action:"SUBSCRIBED",
+          label:"Subscribed for mail",
+          value: searchText
+        })
         setSubscribed(true);
         api.post(`/sendMail`,{mailID:searchText}).then(succes =>{
           console.log(success)
